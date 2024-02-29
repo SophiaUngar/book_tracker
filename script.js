@@ -3,19 +3,18 @@ const list = [];
 
 // add book to list
 const addBook = function() {
-    // get information about the book
+    // date is different to use date object
     const date = new Date(document.getElementById('book_date').value);
-    const title = document.getElementById('book_title').value;
-    const author = document.getElementById('book_author').value;
 
-    // add to the list
-    list.push([date, title, author]);
-
-    // clears input fields after adding the data
-    document.getElementById('book_date').value = '';
-    document.getElementById('book_title').value = '';
-    document.getElementById('book_author').value = '';
-
+    let attributes = [title, author, genre, stars, review];
+    list.push( takeIn.map(attributes).unshift(date)); // do to each thing, add date to front
+    
+    const takeIn = function(att) {
+        const thing = document.getElementById('book_'+att).value; // get the value
+        document.getElementById('book_'+att).value = ''; // reset input
+        return thing;
+    }
+    
     // show the books
     displayTable(list);
 }

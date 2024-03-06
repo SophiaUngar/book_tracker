@@ -1,4 +1,5 @@
 const list = [];
+const attributes = [];
 // TODO: change where list is initialized?
 
 // add book to list
@@ -6,13 +7,14 @@ const addBook = function() {
     // date is different to use date object
     const date = new Date(document.getElementById('book_date').value);
 
-    let attributes = [title, author, genre, stars, review];
-    list.push( takeIn.map(attributes).unshift(date)); // do to each thing, add date to front
-    
-    const takeIn = function(att) {
-        const thing = document.getElementById('book_'+att).value; // get the value
-        document.getElementById('book_'+att).value = ''; // reset input
-        return thing;
+    built_in_attributes = ["title", "author", "genre", "stars", "review"];
+
+    for (att in built_in_attributes) {
+        if (!(att in attributes)) { // if built-in attributes are in the 
+            attributes.push(att);
+        }
+        list[attributes.indexOf(att)].push(document.getElementById('book_'+att).value);
+        document.getElementById('book_'+att).value = '';
     }
     
     // show the books
@@ -50,14 +52,22 @@ const addFile = function() {
     filerder.onload = function () {
         let results = filerder.result;
         const rows = results.split('\n'); // split the string into rows
+        const num_categories = rows[0].length;
+        for (x in range(rows[0].length)) { // what if multiple?
+            if (rows[0][x]=='date' || rows[0][x]=='Date') {
+                const date_index = x;
+            }
+        }
 
-        for (let i=1; i<rows.length; i++) { // ignores label row
-            const words = rows[i].split(','); // split the row into columns
-            words[0] = new Date(words[0]); // turns the date into date format
-            
-            words[words.length-1] = words[words.length-1].replace('\r',''); // necessary?
-            
-            list.push(words); 
+        for (let i=1; i<rows.length; i++) { // for row in 
+            const words = rows[i].split(',');
+            for (let j=0; j<num_categories-1; j++) {
+                list[j].push(words[j]);
+            }
+            words[num_categories-1] = words[num_categories-1].replace('\r','');
+
+            list[i][date_index] = new Date(list[i][date_index]);
+
         }
 
         displayTable(list);
@@ -145,6 +155,7 @@ const storeList = async function() {
     a.click();
 
     URL.revokeObjectURL(a.href);
+    
     
 }
 document.getElementById('export').addEventListener('click', storeList)

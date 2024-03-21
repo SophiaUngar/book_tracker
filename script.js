@@ -6,19 +6,26 @@ const attributes = [];
 const addBook = function() {
     // date is different to use date object
     const date = new Date(document.getElementById('book_date').value);
+    if (!('date' in attributes)) {
+        attributes.push(att);
+        list.push([]);
+    } 
+    list[attributes.indexOf('date')].push(document.getElementById('date').value);
 
     built_in_attributes = ["title", "author", "genre", "stars", "review"];
 
     for (att in built_in_attributes) {
         if (!(att in attributes)) { // if built-in attributes are in the 
             attributes.push(att);
+            list.push([]);
         }
         list[attributes.indexOf(att)].push(document.getElementById('book_'+att).value);
         document.getElementById('book_'+att).value = '';
     }
     
     // show the books
-    displayTable(list);
+    console.log("addbook", list)
+    displayTable();
 }
 // when addBook is clicked run above function 
 const submitBook = document.getElementById('submit');
@@ -51,26 +58,46 @@ const addFile = function() {
     filerder.readAsText(file);
     filerder.onload = function () {
         let results = filerder.result;
-        const rows = results.split('\n'); // split the string into rows
-        const num_categories = rows[0].length;
-        for (x in range(rows[0].length)) { // what if multiple?
-            if (rows[0][x]=='date' || rows[0][x]=='Date') {
-                const date_index = x;
+
+        // split the results into rows
+        const rows = results.split('\n'); 
+
+        // split the rows into cells
+        for (let i=0; i<rows.length; i++) {
+            rows[i] = rows[i].replace('\r','').split(',');
+        }
+
+        // add attribute to labels and add array for that attribute
+        for (let r=0; r<rows[0].length; r++) {
+            rows[0][r] = rows[0][r].toLowerCase();
+            if (!(rows[0][r].toLowerCase() in attributes)) {
+                attributes.push(rows[0][r]);
+                list.push([]);
+            } 
+        }
+
+        // where in the new rows each attribute is
+        const att_indices = [];
+        for (let t=0; t<attributes.length; t++) {
+            if (rows[0].includes(attributes[t])) {
+                att_indices.push(rows[0].indexOf(attributes[t]));
+            } else {
+                att_indices.push(-1);
+            }
+        }
+        
+        // add new thing to each row
+        for (let l=1; l<rows[0].length; l++) { // for each book (skip labels)
+            for (let a=0; a<attributes.length; a++) { // for each attribute
+                if (att_indices[attributes[a]] == -1) {
+                    list[a].push([]);
+                } else {
+                    list[a].push(rows[l][att_indices[a]]);
+                }
             }
         }
 
-        for (let i=1; i<rows.length; i++) { // for row in 
-            const words = rows[i].split(',');
-            for (let j=0; j<num_categories-1; j++) {
-                list[j].push(words[j]);
-            }
-            words[num_categories-1] = words[num_categories-1].replace('\r','');
-
-            list[i][date_index] = new Date(list[i][date_index]);
-
-        }
-
-        displayTable(list);
+        displayTable();
 
     }
     filerder.onerror = function () {
@@ -81,25 +108,24 @@ const addFile = function() {
 document.getElementById('submit_file').addEventListener('click', addFile);
 
 
-const displayTable = function(data) {
+const displayTable = function() {
     
     // for every label, add to table contents
-    let table_contents = '<tr><th>Date</th><th>Title</th><th>Author</th></tr>';
-    //for (label of data[0]) {
-    //    table_contents = table_contents + '<th>' + label + '</th>';
-    //}
-    //table_contents = table_contents + '</tr>';
+    let table_contents = '<tr>' //'<tr><th>Date</th><th>Title</th><th>Author</th></tr>';
+    for (label of attributes) {
+        table_contents = table_contents + '<th>' + label + '</th>';
+    }
+    table_contents = table_contents + '</tr>';
 
 
     // for every thing in every row add to table contents
-    for (let i=0; i<data.length; i++) {
-        table_contents = table_contents + '<tr>';
+    for (let i=0; i<list[0].length; i++) {
+        table_contents += '<tr>';
 
-        // display date in reasonable form
-        table_contents = table_contents + '<td>' + data[i][0].toDateString() + '</td>';
-        for (let j=1; j<data[i].length; j++) {
-            table_contents = table_contents + '<td>' + data[i][j] + '</td>';
+        for (let j=0; j<list.length; j++) {
+            table_contents += '<td>' + list[j][i] + '</td>';
         }
+        
         table_contents = table_contents + '</tr>';
     }
 
@@ -167,16 +193,36 @@ document.getElementById('export').addEventListener('click', storeList)
 
 const newView = function() {
     //document.getElementById('content').style.display = 'none';
-    display_string = '';
-    for (let i=0; i<list.length; i++) { // for every book
-        display_string += '<h2>'+list[i][0]+'</h2><h3>';
-        for (let j=1; j<list[i].length-1; j++) {
-            display_string += list[i][j]; 
-        }
-        display_string += '</h3>';
-        display_string += '<p>'+list[i][list[i].length]+'</p>';
-        
+    display_string = '<h1>Books</h1>';
+
+    let title_index = -1;
+    if (attributes.includes('title')) {
+        title_index = attributes.indexOf('title');
     }
-    document.getElementById('content').innerHTML = display_string;
+    let review_index = -1;
+    if (attributes.includes('review')) {
+        review_index = attributes.indexOf('review');
+    }
+
+    for (let b=0; b<list[0].length; b++) { // for every book
+        if (title_index != -1) {
+            display_string += '<h2>'+list[title_index][b]+'</h2>';
+
+            for (let i=0; i<attributes.length; i++) {
+                if (!(i==title_index) || (i==review_index)) {
+                    display_string += '<h3>'+list[i][b]+'</h3>';
+                }
+            }
+        
+            if (review_index != -1) {
+                display_string += '<p>'+list[b][review_index]+'</p>';
+            }
+
+        } else {
+            display_string += 'hi!'
+        }
+    }
+    document.getElementById('display').innerHTML = display_string;
+
 }
 document.getElementById('long-form').addEventListener('click', newView)

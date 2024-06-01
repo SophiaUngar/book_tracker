@@ -1,6 +1,5 @@
 const list = [];
 const attributes = [];
-// TODO: change where list is initialized?
 
 // add book to list
 const addBook = function() {
@@ -24,8 +23,7 @@ const addBook = function() {
     }
     
     // show the books
-    console.log("addbook", list)
-    displayTable();
+    displayDefaultTable();
 }
 // when addBook is clicked run above function 
 const submitBook = document.getElementById('submit');
@@ -85,6 +83,7 @@ const addFile = function() {
                 att_indices.push(-1);
             }
         }
+
         
         // add new thing to each row
         for (let l=1; l<rows[0].length; l++) { // for each book (skip labels)
@@ -97,7 +96,16 @@ const addFile = function() {
             }
         }
 
-        displayTable();
+        
+        let date_att = attributes.indexOf('date');
+        if (date_att != -1) {
+            for (let i=0; i<list[date_att].length; i++) {
+                list[date_att][i] = new Date(list[date_att][i]);
+            }
+        }   
+        
+
+        displayDefaultTable();
 
     }
     filerder.onerror = function () {
@@ -108,25 +116,31 @@ const addFile = function() {
 document.getElementById('submit_file').addEventListener('click', addFile);
 
 
-const displayTable = function() {
+const displayTable = function(table, atts) {
     
     // for every label, add to table contents
     let table_contents = '<tr>' //'<tr><th>Date</th><th>Title</th><th>Author</th></tr>';
-    for (label of attributes) {
+    for (label of atts) {
         table_contents = table_contents + '<th>' + label + '</th>';
     }
     table_contents = table_contents + '</tr>';
 
 
+    let date_att = atts.indexOf('date');
     // for every thing in every row add to table contents
-    for (let i=0; i<list[0].length; i++) {
-        table_contents += '<tr>';
 
-        for (let j=0; j<list.length; j++) {
-            table_contents += '<td>' + list[j][i] + '</td>';
+    for (let i=0; i<table[0].length; i++) { // for every book
+        table_contents += '<tr>';
+        
+        for (let j=0; j<table.length; j++) { // for every category
+            if (j==date_att) {
+                table_contents += '<td>' + table[j][i].toLocaleDateString() + '</td>';
+            } else {
+                table_contents += '<td>' + table[j][i] + '</td>';
+            }
         }
         
-        table_contents = table_contents + '</tr>';
+        table_contents += '</tr>'; 
     }
 
     // put table contents in the table
@@ -134,28 +148,50 @@ const displayTable = function() {
 }
 
 
+const displayDefaultTable = function() {
+    displayTable(list, attributes)
+}
+
+
+
 const sortList = function(order) {
     if (order === 'newest') {
-        list.sort(function(a,b){return a[0].getTime()<b[0].getTime()});
-        displayTable( list);
-        console.log(list);
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[att].getTime()<b[att].getTime()});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
     }
     else if (order === 'oldest') {
-        list.sort(function(a,b){return b[0].getTime()<a[0].getTime()});
-        displayTable( list);
-        console.log(list);
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[att].getTime()>b[att].getTime()});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
     }
     else if (order=== 'alphabetical') {
-        list.sort(function(a,b){ return a[1].localeCompare(b[1])});
-        displayTable(list);
-        console.log(list);
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[1].localeCompare(b[1])});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
     } 
+    else if(order === 'original') {
+        displayDefaultTable();
+    }
     // tosort would make a copy of the list
 }
 document.getElementById('sort_newest').addEventListener('click', function(){sortList('newest')});
 document.getElementById('sort_oldest').addEventListener('click', function(){sortList('oldest')})
 document.getElementById('sort_alphabetical').addEventListener('click', function(){sortList('alphabetical')})
+document.getElementById('sort_original').addEventListener('click', function(){sortList('original')})
 // need function to get the type of sort in
+
+
+const transpose = function(tlist) {
+    return tlist[0].map((col, i) => tlist.map(row => row[i]));
+    // from https://www.geeksforgeeks.org/transpose-a-two-dimensional-2d-array-in-javascript/
+}
 
 
 // store list
@@ -193,30 +229,37 @@ document.getElementById('export').addEventListener('click', storeList)
 
 const newView = function() {
     //document.getElementById('content').style.display = 'none';
-    display_string = '<h1>Books</h1>';
+    //display_string = '<h1>Books</h1>';
+    let display_string = '<button id="switch_back">Switch Back to Table View</button>';
 
-    let title_index = -1;
-    if (attributes.includes('title')) {
-        title_index = attributes.indexOf('title');
-    }
-    let review_index = -1;
-    if (attributes.includes('review')) {
-        review_index = attributes.indexOf('review');
+    const special_attributes = ['title', 'author', 'review'];
+    const special_attributes_indices = [];
+    for (let i=0; i<special_attributes.length; i++) {
+        if (attributes.includes(special_attributes[i])) {
+            special_attributes_indices.push( attributes.indexOf(special_attributes[i]));
+        } else {
+            special_attributes_indices.push(-1);
+        }
     }
 
     for (let b=0; b<list[0].length; b++) { // for every book
-        if (title_index != -1) {
-            display_string += '<h2>'+list[title_index][b]+'</h2>';
+        if (special_attributes_indices[0] != -1) {
+            display_string += '<h2>'+list[special_attributes_indices[0]][b]+'</h2>';
 
+            display_string += '<h3>';
+            display_string += list[special_attributes_indices[1]][b]+' ';
             for (let i=0; i<attributes.length; i++) {
-                if (!(i==title_index) || (i==review_index)) {
-                    display_string += '<h3>'+list[i][b]+'</h3>';
+                if (!(special_attributes_indices.includes(i))) {
+                    display_string += list[i][b] + ' ';
                 }
             }
+            display_string += '</h3>';
         
-            if (review_index != -1) {
-                display_string += '<p>'+list[b][review_index]+'</p>';
+            if (special_attributes_indices[2] != -1) {
+                display_string += '<p>'+list[special_attributes_indices[2]][b]+'</p>';
             }
+
+            display_string += '<br>';
 
         } else {
             display_string += 'hi!'
@@ -224,5 +267,13 @@ const newView = function() {
     }
     document.getElementById('display').innerHTML = display_string;
 
+
+    const oldView = function() {
+        displayDefaultTable();
+    }
+    document.getElementById('switch_back').addEventListener('click', oldView)
+
 }
 document.getElementById('long-form').addEventListener('click', newView)
+
+

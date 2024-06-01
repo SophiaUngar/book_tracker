@@ -2,3 +2,8 @@ body {
     background-color: burlywood;
 }
 
+
+#book_review {
+    width: 50%;
+    height: 100px;
+}

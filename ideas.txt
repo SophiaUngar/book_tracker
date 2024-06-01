@@ -24,6 +24,10 @@ problems
 - today not working again
 - sort by date doesn't work on second spreadsheet addition until sort by alphabetical
 - switch back to original view
+- multi paragraph reviews
+
+questions
+- change where the list is initialized?
 
 
 other

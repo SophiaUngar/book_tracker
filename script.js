@@ -1,26 +1,39 @@
 const list = [];
 const attributes = [];
+let bookcount = 0;
 
 // add book to list
 const addBook = function() {
     // date is different to use date object
     const date = new Date(document.getElementById('book_date').value);
-    if (!('date' in attributes)) {
+    if (!(attributes.includes('date'))) {
         attributes.push(att);
-        list.push([]);
+
+        if (bookcount>0) {
+            list.push(new Array(bookcount));
+        } else { list.push(new Array());}
     } 
     list[attributes.indexOf('date')].push(document.getElementById('date').value);
 
     built_in_attributes = ["title", "author", "genre", "stars", "review"];
 
+    // for every attribute
     for (att in built_in_attributes) {
-        if (!(att in attributes)) { // if built-in attributes are in the 
+        if (!(attributes.includes('att'))) { // if built-in attributes are not in the attributes list
             attributes.push(att);
-            list.push([]);
+
+            if (bookcount>0) {
+                list.push(new Array(bookcount));
+            } else { list.push(new Array());}
         }
         list[attributes.indexOf(att)].push(document.getElementById('book_'+att).value);
+
+        // clear value
         document.getElementById('book_'+att).value = '';
     }
+    bookcount++;
+
+    console.log(list);
     
     // show the books
     displayDefaultTable();
@@ -67,10 +80,14 @@ const addFile = function() {
 
         // add attribute to labels and add array for that attribute
         for (let r=0; r<rows[0].length; r++) {
-            rows[0][r] = rows[0][r].toLowerCase();
-            if (!(rows[0][r].toLowerCase() in attributes)) {
+            rows[0][r] = rows[0][r].toLowerCase().trim(); // to not add the same categories
+            // if the attribute isn't in the list
+            if (!(attributes.includes(rows[0][r]))) {
                 attributes.push(rows[0][r]);
-                list.push([]);
+
+                if (bookcount>0) {
+                    list.push(new Array(bookcount));
+                } else { list.push(new Array());}
             } 
         }
 
@@ -94,6 +111,7 @@ const addFile = function() {
                     list[a].push(rows[l][att_indices[a]]);
                 }
             }
+            bookcount++;
         }
 
         
@@ -111,7 +129,7 @@ const addFile = function() {
     filerder.onerror = function () {
         console.log("File reader error: ", reader.error);
     }
-    
+    console.log(list);
 }
 document.getElementById('submit_file').addEventListener('click', addFile);
 

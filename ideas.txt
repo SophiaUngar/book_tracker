@@ -10,6 +10,7 @@ flexibility
 - drag and drop to rearrange the categories
 - delete books
 - change entries
+- accept Excel files
 
 data validation
 - what if title has a comma?

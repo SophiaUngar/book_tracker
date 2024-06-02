@@ -335,8 +335,8 @@ document.getElementById('export').addEventListener('click', listCSV)
 
 const storeList = function() {
     if (typeof(Storage) !== 'undefined') {
-        localStorage.setItem('list', list);
-        localStorage.setItem('attributes', attributes);
+        localStorage.setItem('list', JSON.stringify(list));
+        localStorage.setItem('attributes', JSON.stringify(attributes));
         localStorage.setItem('bookcount', bookcount);
     } //else {
 

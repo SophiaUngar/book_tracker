@@ -3,9 +3,13 @@ const attributes = [];
 let bookcount = 0;
 
 const loadBooks = function() {
-    list = localStorage.getItem('list');
-    attributes = localStorage.getItem('attributes');
-    bookcount = localStorage.getItem('bookcount');
+    list = JSON.parse(localStorage.getItem('list', list));
+    attributes = JSON.parse(localStorage.getItem('attributes', attributes));
+    bookcount = JSON.parse(localStorage.getItem('bookcount', bookcount));
+
+    console.log(list);
+    console.log(attributes);
+    console.log(bookcount);
 
     displayDefaultTable();
 
@@ -253,7 +257,6 @@ const newView = function() {
 
     const oldView = function() {
         document.getElementById('display2').style.display = 'none';
-        console.log(list);
         document.getElementById('display1').style.display = 'initial';
         displayDefaultTable();
     }

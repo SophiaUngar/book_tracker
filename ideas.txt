@@ -24,6 +24,8 @@ small things to add
 problems
 - today not working again
 - multi paragraph reviews
+- need to shorten date in alternate view
+- reusable template
 
 questions
 - change where the list is initialized?

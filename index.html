@@ -10,20 +10,15 @@
 
 
 
-<body id="body">
-
-    <div id="grid">
-    
-    <div class="grid-cell" id="header">
+<body>
     <header>
         <h1>Bookshelf</h1>
     </header>
-    </div>
 
     <div id="content">
 
-        <div class="book input">
-        <h2>Add Book</h2>
+        <div class="book-input">
+            <h2>Add Book</h2>
 
             <!-- validation? -->
             <label for="book_date">Date</label>
@@ -50,6 +45,8 @@
             <label for="book_review">Review/ Notes</label>
             <input type="text" id="book_review">
 
+            <br>
+
             <button id="submit">Add Book</button>
             <button id="clear">Clear</button>
 
@@ -67,34 +64,46 @@
         
         </div>
 
+        <br>
 
-        <h2>Books List</h2>
-            
-        <!-- download table -->
-        <button id="export">Download List CSV File</button>
-          
-            
-        <div id="display1">
-            <button id="long-form">Switch View</button>
+        <div id="stats">
+            <h2>Books Stats </h2>
 
-            <!-- ways to sort -->
-            <div>
-                    <button id="sort_newest">By Date - Most Recent First</button>
-                    <button id="sort_oldest">By Date - Oldest First</button>
-                    <button id="sort_alphabetical">Alphabetical By Title</button>
-                    <button id="sort_original">Original Sorting</button>
+            <p>Total Books: <span id="total-books"></span></p>
+            <p>This Year: <span id="year-books"></span></p>
+            <p>This Month: <span id="month-books"></span></p>
+        </div>
+
+        <br>
+
+        <div id="list">
+            <h2>Books List</h2>
+                
+            <!-- download table -->
+            <button id="export">Download List CSV File</button>
+            
+                
+            <div id="display1">
+                <button id="long-form">Switch View</button>
+
+                <!-- ways to sort -->
+                <div>
+                        <button id="sort_newest">By Date - Most Recent First</button>
+                        <button id="sort_oldest">By Date - Oldest First</button>
+                        <button id="sort_alphabetical">Alphabetical By Title</button>
+                        <button id="sort_original">Original Sorting</button>
+                </div>
+                    
+                <table id="books_list"></table>
             </div>
                 
-            <table id="books_list"></table>
-        </div>
-            
-        <div id="display2"></div>
+            <div id="display2"></div>
         </div>
 
         <br>
 
         <footer>
-            Copyright 2024 Sophia Ungar
+            Copyright 2024 <a href="about-me.html">Sophia Ungar</a>
         </footer>
     
 

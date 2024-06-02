@@ -33,10 +33,10 @@ const addBook = function() {
     }
     bookcount++;
 
-    console.log(list);
-    
     // show the books
     displayDefaultTable();
+
+    stat_calc();
 }
 // when addBook is clicked run above function 
 const submitBook = document.getElementById('submit');
@@ -125,11 +125,12 @@ const addFile = function() {
 
         displayDefaultTable();
 
+        stat_calc();
+
     }
     filerder.onerror = function () {
         console.log("File reader error: ", reader.error);
     }
-    console.log(list);
 }
 document.getElementById('submit_file').addEventListener('click', addFile);
 
@@ -166,9 +167,74 @@ const displayTable = function(table, atts) {
 }
 
 
+
+
 const displayDefaultTable = function() {
     displayTable(list, attributes)
 }
+
+
+
+
+const newView = function() {
+    // button to go back
+    let display_string = '<button id="switch_back">Switch Back to Table View</button>';
+
+    // 
+    const special_attributes = ['title', 'author', 'review'];
+    const special_attributes_indices = [];
+    for (let i=0; i<special_attributes.length; i++) {
+        if (attributes.includes(special_attributes[i])) {
+            special_attributes_indices.push( attributes.indexOf(special_attributes[i]));
+        } else {
+            special_attributes_indices.push(-1);
+        }
+    }
+
+    // for every book
+    for (let b=0; b<list[0].length; b++) { 
+        if (special_attributes_indices[0] != -1) { // if normal attribute
+            display_string += '<h2>'+list[special_attributes_indices[0]][b]+'</h2>';
+
+            display_string += '<h3>';
+            display_string += list[special_attributes_indices[1]][b]+' ';
+            for (let i=0; i<attributes.length; i++) {
+                if (!(special_attributes_indices.includes(i))) {
+                    display_string += list[i][b] + '\t';
+                }
+            }
+            display_string += '</h3>';
+        
+            // review
+            if (special_attributes_indices[2] != -1) {
+                display_string += '<p>'+list[special_attributes_indices[2]][b]+'</p>';
+            }
+
+            display_string += '<br>';
+
+        } else {
+            //TODO replace with a proper error message
+            display_string += 'hi!';
+        }
+    }
+    // get rid of the old view
+    document.getElementById('display1').style.display = 'none';
+
+    // so if you told it to display none in oldView it will stop now
+    document.getElementById('display2').style.display = 'initial';
+    document.getElementById('display2').innerHTML = display_string;
+
+
+    const oldView = function() {
+        document.getElementById('display2').style.display = 'none';
+        console.log(list);
+        document.getElementById('display1').style.display = 'initial';
+        displayDefaultTable();
+    }
+    document.getElementById('switch_back').addEventListener('click', oldView)
+
+}
+document.getElementById('long-form').addEventListener('click', newView)
 
 
 
@@ -242,67 +308,13 @@ document.getElementById('export').addEventListener('click', storeList)
 
 
 
+const stat_calc = function() {
+    document.getElementById('total-books').innerHTML = bookcount;
 
+    document.getElementById('year-books').innerHTML = 
+        list[attributes.indexOf('date')].filter(function(x){return x.getFullYear() == new Date().getFullYear();}).length;
 
-
-const newView = function() {
-    // button to go back
-    let display_string = '<button id="switch_back">Switch Back to Table View</button>';
-
-    // 
-    const special_attributes = ['title', 'author', 'review'];
-    const special_attributes_indices = [];
-    for (let i=0; i<special_attributes.length; i++) {
-        if (attributes.includes(special_attributes[i])) {
-            special_attributes_indices.push( attributes.indexOf(special_attributes[i]));
-        } else {
-            special_attributes_indices.push(-1);
-        }
-    }
-
-    // for every book
-    for (let b=0; b<list[0].length; b++) { 
-        if (special_attributes_indices[0] != -1) { // if normal attribute
-            display_string += '<h2>'+list[special_attributes_indices[0]][b]+'</h2>';
-
-            display_string += '<h3>';
-            display_string += list[special_attributes_indices[1]][b]+' ';
-            for (let i=0; i<attributes.length; i++) {
-                if (!(special_attributes_indices.includes(i))) {
-                    display_string += list[i][b] + '\t';
-                }
-            }
-            display_string += '</h3>';
-        
-            // review
-            if (special_attributes_indices[2] != -1) {
-                display_string += '<p>'+list[special_attributes_indices[2]][b]+'</p>';
-            }
-
-            display_string += '<br>';
-
-        } else {
-            //TODO replace with a proper error message
-            display_string += 'hi!';
-        }
-    }
-    // get rid of the old view
-    document.getElementById('display1').style.display = 'none';
-
-    // so if you told it to display none in oldView it will stop now
-    document.getElementById('display2').style.display = 'initial';
-    document.getElementById('display2').innerHTML = display_string;
-
-
-    const oldView = function() {
-        document.getElementById('display2').style.display = 'none';
-        console.log(list);
-        document.getElementById('display1').style.display = 'initial';
-        displayDefaultTable();
-    }
-    document.getElementById('switch_back').addEventListener('click', oldView)
-
+    document.getElementById('month-books').innerHTML = 
+        list[attributes.indexOf('date')].filter(function(x){return (x.getFullYear() == new Date().getFullYear()) && 
+            (x.getMonth() == new Date().getMonth());}).length;
 }
-document.getElementById('long-form').addEventListener('click', newView)
-
-

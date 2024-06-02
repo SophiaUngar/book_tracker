@@ -309,12 +309,17 @@ document.getElementById('export').addEventListener('click', storeList)
 
 
 const stat_calc = function() {
+    // total books
     document.getElementById('total-books').innerHTML = bookcount;
 
+    // books this year
     document.getElementById('year-books').innerHTML = 
-        list[attributes.indexOf('date')].filter(function(x){return x.getFullYear() == new Date().getFullYear();}).length;
+        list[attributes.indexOf('date')].filter( // filters just the books from this year and gets the length
+            function(x){return x.getFullYear() == new Date().getFullYear();} ).length;
 
+    // books this month
     document.getElementById('month-books').innerHTML = 
-        list[attributes.indexOf('date')].filter(function(x){return (x.getFullYear() == new Date().getFullYear()) && 
+        list[attributes.indexOf('date')].filter(
+            function(x){return (x.getFullYear() == new Date().getFullYear()) && 
             (x.getMonth() == new Date().getMonth());}).length;
 }

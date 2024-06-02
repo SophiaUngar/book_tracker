@@ -9,19 +9,24 @@ bigger ideas
 flexibility
 - drag and drop to rearrange the categories
 - delete books
+- change entries
 
 data validation
 - what if title has a comma?
 - what if there are repeats?
 - what if list in different order
 - throw errors if things are wrong
+- protect against hackers
 
 small things to add
 - buttons next to labels for sorting
 
 problems
 - today not working again
-- sort by date doesn't work on second spreadsheet addition until sort by alphabetical
+- multi paragraph reviews
+
+questions
+- change where the list is initialized?
 
 
 other

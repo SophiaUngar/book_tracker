@@ -16,12 +16,11 @@
     
     <div class="grid-cell" id="header">
     <header>
-        <h1>Books List</h1>
+        <h1>Bookshelf</h1>
     </header>
     </div>
 
     <div id="content">
-        <button id="long-form">Switch</button>
 
         <div class="book input">
         <h2>Add Book</h2>
@@ -45,8 +44,10 @@
             
             <label for="book_stars">Stars</label>
             <input type="text" id="book_stars">
+
+            <br>
             
-            <label for="book_review">Review</label>
+            <label for="book_review">Review/ Notes</label>
             <input type="text" id="book_review">
 
             <button id="submit">Add Book</button>
@@ -61,30 +62,39 @@
             <label for="input_file">CSV File</label>
             <input id="input_file" type="file">
             <button id="submit_file">Submit</button>
+
+            <br>
+        
         </div>
 
 
-        <div class="display">
-            <h2>My Books</h2>
+        <h2>Books List</h2>
+            
+        <!-- download table -->
+        <button id="export">Download List CSV File</button>
+          
+            
+        <div id="display1">
+            <button id="long-form">Switch View</button>
 
             <!-- ways to sort -->
             <div>
-                <button id="sort_newest">By Date - Most Recent First</button>
-                <button id="sort_oldest">By Date - Oldest First</button>
-                <button id="sort_alphabetical">Alphabetical By Title</button>
+                    <button id="sort_newest">By Date - Most Recent First</button>
+                    <button id="sort_oldest">By Date - Oldest First</button>
+                    <button id="sort_alphabetical">Alphabetical By Title</button>
+                    <button id="sort_original">Original Sorting</button>
             </div>
-            
-            <!-- table -->
-            <button id="export">Download List</button>
+                
             <table id="books_list"></table>
-
-            <br>
+        </div>
             
+        <div id="display2"></div>
         </div>
 
+        <br>
 
         <footer>
-            Copyright Sophia Ungar
+            Copyright 2024 Sophia Ungar
         </footer>
     
 

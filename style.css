@@ -1,6 +1,13 @@
 body {
-    background-color: burlywood;
+    background-color:cornsilk;
+    margin: 5%;
+    font-family:'Courier New', Courier, monospace;
 }
+
+/*#content {
+    width: 80%;
+    margin: auto;
+}*/
 
 
 #book_review {

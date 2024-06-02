@@ -1,7 +1,7 @@
 *Ideas
 
 bigger ideas
-- book stats: all time and by year
+- book stats by genre, pages, etc.
 - should I be using classes?
 - reviews
 - should it save to the same directory? maybe one software like version and one for the web?
@@ -24,6 +24,8 @@ small things to add
 problems
 - today not working again
 - multi paragraph reviews
+- need to shorten date in alternate view
+- reusable template
 
 questions
 - change where the list is initialized?

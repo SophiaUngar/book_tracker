@@ -1,9 +1,8 @@
 *Ideas
 
 bigger ideas
-- book stats by genre, pages, etc.
+- book stats by genre, pages, most read author etc.
 - should I be using classes?
-- reviews
 - should it save to the same directory? maybe one software like version and one for the web?
 
 flexibility

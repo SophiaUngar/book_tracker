@@ -2,6 +2,18 @@ const list = [];
 const attributes = [];
 let bookcount = 0;
 
+const loadBooks = function() {
+    list = localStorage.getItem('list');
+    attributes = localStorage.getItem('attributes');
+    bookcount = localStorage.getItem('bookcount');
+
+    displayDefaultTable();
+
+    stat_calc();
+}
+document.addEventListener('load',loadBooks);
+
+
 // add book to list
 const addBook = function() {
     // date is different to use date object
@@ -35,6 +47,12 @@ const addBook = function() {
 
     // show the books
     displayDefaultTable();
+
+    if (typeof(Storage) !== 'undefined') {
+        localStorage.setItem('list', list);
+        localStorage.setItem('attributes', attributes);
+        localStorage.setItem('bookcount', bookcount);
+    }
 
     stat_calc();
 }
@@ -124,6 +142,12 @@ const addFile = function() {
         
 
         displayDefaultTable();
+
+        if (typeof(Storage) !== 'undefined') {
+            localStorage.setItem('list', list);
+            localStorage.setItem('attributes', attributes);
+            localStorage.setItem('bookcount', bookcount);
+        }
 
         stat_calc();
 
@@ -280,7 +304,7 @@ const transpose = function(tlist) {
 
 // store list
 // downloads csv file with data
-const storeList = async function() {
+const listCSV = async function() {
     // to store values
     csvvalues = [];
     csvvalues.push("'Date','Title','Author'");
@@ -304,7 +328,19 @@ const storeList = async function() {
     
     
 }
-document.getElementById('export').addEventListener('click', storeList)
+document.getElementById('export').addEventListener('click', listCSV)
+
+
+const storeList = function() {
+    if (typeof(Storage) !== 'undefined') {
+        localStorage.setItem('list', list);
+        localStorage.setItem('attributes', attributes);
+        localStorage.setItem('bookcount', bookcount);
+    } //else {
+
+        // error
+    //}
+}
 
 
 

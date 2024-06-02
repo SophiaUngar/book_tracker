@@ -337,7 +337,7 @@ const storeList = function() {
     if (typeof(Storage) !== 'undefined') {
         localStorage.setItem('list', JSON.stringify(list));
         localStorage.setItem('attributes', JSON.stringify(attributes));
-        localStorage.setItem('bookcount', bookcount);
+        localStorage.setItem('bookcount', JSON.stringify(bookcount));
     } //else {
 
         // error

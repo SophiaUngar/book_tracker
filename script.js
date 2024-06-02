@@ -55,6 +55,7 @@ const addBook = function() {
     }
 
     stat_calc();
+    storeList();
 }
 // when addBook is clicked run above function 
 const submitBook = document.getElementById('submit');
@@ -150,6 +151,7 @@ const addFile = function() {
         }
 
         stat_calc();
+        storeList();
 
     }
     filerder.onerror = function () {

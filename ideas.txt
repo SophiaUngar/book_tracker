@@ -1,4 +1,6 @@
 *Ideas
+current
+- can't copy to array onload
 
 bigger ideas
 - book stats by genre, pages, most read author etc.

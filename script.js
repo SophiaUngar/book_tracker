@@ -1,21 +1,32 @@
-const list = [];
-const attributes = [];
+let list = [];
+let attributes = [];
 let bookcount = 0;
 
 const loadBooks = function() {
-    list = JSON.parse(localStorage.getItem('list', list));
-    attributes = JSON.parse(localStorage.getItem('attributes', attributes));
-    bookcount = JSON.parse(localStorage.getItem('bookcount', bookcount));
+    list.length = 0;
+    
+    const newList = JSON.parse(localStorage.getItem('list'));
+    for (let i=0; i<newList.length; i++) {
+        list.push(newList[i]);
+    }
 
-    console.log(list);
-    console.log(attributes);
-    console.log(bookcount);
+    attributes = [];
+    attributes = JSON.parse(localStorage.getItem('attributes'));
+
+    bookcount = JSON.parse(localStorage.getItem('bookcount'));
+
+    let date_att = attributes.indexOf('date');
+    if (date_att != -1) {
+        for (let i=0; i<list[date_att].length; i++) {
+            list[date_att][i] = new Date(list[date_att][i]);
+        }
+    }   
 
     displayDefaultTable();
 
     stat_calc();
 }
-document.addEventListener('load',loadBooks);
+window.addEventListener('load',loadBooks);
 
 
 // add book to list
@@ -56,6 +67,8 @@ const addBook = function() {
         localStorage.setItem('list', list);
         localStorage.setItem('attributes', attributes);
         localStorage.setItem('bookcount', bookcount);
+    } else {
+        console.log('storage doesnt work');
     }
 
     stat_calc();

@@ -9,7 +9,18 @@ body {
     margin: auto;
 }*/
 
+p {
+    width: 90%;
+}
 
+table {
+    width: 90%;
+    border-collapse: separate;
+    border-spacing: 50px 0;
+}
+
+
+/* input */
 #book_review {
     width: 50%;
     height: 100px;

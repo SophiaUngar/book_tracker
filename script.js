@@ -181,7 +181,7 @@ document.getElementById('submit_file').addEventListener('click', addFile);
 const displayTable = function(table, atts) {
     
     // for every label, add to table contents
-    let table_contents = '<tr>' //'<tr><th>Date</th><th>Title</th><th>Author</th></tr>';
+    let table_contents = '<br><tr>'; 
     for (label of atts) {
         table_contents = table_contents + '<th>' + label + '</th>';
     }

@@ -4,14 +4,10 @@ body {
     font-family:'Courier New', Courier, monospace;
 }
 
-/*#content {
-    width: 80%;
-    margin: auto;
-}*/
-
 p {
     width: 90%;
 }
+
 
 table {
     width: 90%;
@@ -20,8 +16,19 @@ table {
 }
 
 
+
 /* input */
 #book_review {
     width: 50%;
     height: 100px;
+}
+
+
+/* sign in page */
+#sign-in {
+    text-align: center;
+    vertical-align: middle;
+
+    padding:0%;
+    margin: 15%;
 }

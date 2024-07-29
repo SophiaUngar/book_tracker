@@ -9,9 +9,9 @@ bigger ideas
 
 flexibility
 - drag and drop to rearrange the categories
-- delete books
 - change entries
 - accept Excel files
+- reset
 
 data validation
 - what if title has a comma?
@@ -42,3 +42,7 @@ dealt with:
 - download csv file has 0,1,2 on first line
 - input csv unconnected
 - sort broken and why does it seem to be running when I don't press it? (solution: function needed return)
+
+- local storage
+- basic book stats
+- delete books

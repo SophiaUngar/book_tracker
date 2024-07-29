@@ -4,17 +4,25 @@ let bookcount = 0;
 
 const loadBooks = function() {
     list.length = 0;
+    bookcount = 0;
+    // is this what we want to do?
     
+    // loads the list with all the books from local storage
     const newList = JSON.parse(localStorage.getItem('list'));
-    for (let i=0; i<newList.length; i++) {
-        list.push(newList[i]);
+    if (newList != null) {
+        for (let i=0; i<newList.length; i++) {
+            list.push(newList[i]);
+        }
     }
 
+    // gets the list of attributes from local storage
     attributes = [];
     attributes = JSON.parse(localStorage.getItem('attributes'));
 
+    // gets the number of books from local storage
     bookcount = JSON.parse(localStorage.getItem('bookcount'));
 
+    // turns dates into JS dates for manipulation
     let date_att = attributes.indexOf('date');
     if (date_att != -1) {
         for (let i=0; i<list[date_att].length; i++) {
@@ -22,9 +30,11 @@ const loadBooks = function() {
         }
     }   
 
-    displayDefaultTable();
+    if (list.length > 0) {
+        displayDefaultTable();
+        stat_calc();
+    }
 
-    stat_calc();
 }
 window.addEventListener('load',loadBooks);
 
@@ -88,14 +98,43 @@ document.getElementById('book_date_today').addEventListener('click', today);*/
 
 const delete_row = function(row_num) {
     for (let i=0; i<attributes.length; i++) {
-        list[i].pop(row_num);
+        list[i].splice(row_num,1);
     }
-    stat_calc();
     storeList();
+
+    bookcount --;
+    stat_calc();
+    
     
     displayDefaultTable();
 }
 // TODO: add undo
+
+// deletes attribute from table
+const delete_col = function(label_index) {
+    attributes.splice(label_index,1);
+    
+    list.splice(label_index,1);
+
+    displayDefaultTable();
+    storeList();
+}
+
+
+const reset_list = function() {
+    let msg = 'Are you sure you want to delete all of your books?'
+
+    if (confirm(msg) == true) {
+        list = [];
+        attributes = [];
+        bookcount = 0;
+
+        document.getElementById('books_list').innerHTML = '';
+        storeList();
+    }
+
+}
+document.getElementById('reset').addEventListener('click', reset_list)
 
 
 // clear entries
@@ -193,8 +232,8 @@ const displayTable = function(table, atts) {
     
     // for every label, add to table contents
     let table_contents = '<br><tr>'; 
-    for (label of atts) {
-        table_contents = table_contents + '<th>' + label + '</th>';
+    for (let index = 0; index < atts.length; index++) {
+        table_contents = table_contents + '<th>' + atts[index] + '<button onclick="delete_col('+index+')">🗑️</button>'+'</th>';
     }
     table_contents = table_contents + '<th>delete</th>' + '</tr>';
 
@@ -226,7 +265,6 @@ const displayTable = function(table, atts) {
 const displayDefaultTable = function() {
     displayTable(list, attributes);
 }
-
 
 
 
@@ -367,7 +405,7 @@ const storeList = function() {
         localStorage.setItem('bookcount', JSON.stringify(bookcount));
     } //else {
 
-        // error
+        // TODO: throw error
     //}
 }
 

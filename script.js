@@ -86,6 +86,17 @@ submitBook.addEventListener('click', addBook);
 }
 document.getElementById('book_date_today').addEventListener('click', today);*/
 
+const delete_row = function(row_num) {
+    for (let i=0; i<attributes.length; i++) {
+        list[i].pop(row_num);
+    }
+    stat_calc();
+    storeList();
+    
+    displayDefaultTable();
+}
+// TODO: add undo
+
 
 // clear entries
 const clear = function() {
@@ -185,7 +196,7 @@ const displayTable = function(table, atts) {
     for (label of atts) {
         table_contents = table_contents + '<th>' + label + '</th>';
     }
-    table_contents = table_contents + '</tr>';
+    table_contents = table_contents + '<th>delete</th>' + '</tr>';
 
 
     let date_att = atts.indexOf('date');
@@ -202,7 +213,8 @@ const displayTable = function(table, atts) {
             }
         }
         
-        table_contents += '</tr>'; 
+        table_contents += '<td><button onclick="delete_row(' + i + ')">🗑️</button></td>' + '</tr>'; 
+
     }
 
     // put table contents in the table
@@ -211,9 +223,8 @@ const displayTable = function(table, atts) {
 
 
 
-
 const displayDefaultTable = function() {
-    displayTable(list, attributes)
+    displayTable(list, attributes);
 }
 
 

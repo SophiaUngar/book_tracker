@@ -227,6 +227,15 @@ const addFile = function() {
 }
 document.getElementById('submit_file').addEventListener('click', addFile);
 
+const save_entry = function(cat_index, book_index) {
+    console.log(cat_index, book_index);
+    console.log(document.getElementById('entry'+cat_index+book_index).value);
+    list[cat_index][book_index] = document.getElementById('entry'+cat_index+book_index).innerText;
+    storeList();
+
+    stat_calc();
+}
+
 
 const displayTable = function(table, atts) {
     
@@ -246,9 +255,9 @@ const displayTable = function(table, atts) {
         
         for (let j=0; j<table.length; j++) { // for every category
             if (j==date_att) {
-                table_contents += '<td>' + table[j][i].toLocaleDateString() + '</td>';
+                table_contents += '<td contenteditable>' + table[j][i].toLocaleDateString() + '</td>';
             } else {
-                table_contents += '<td>' + table[j][i] + '</td>';
+                table_contents += '<td id=entry'+j+i+' contenteditable onfocusout="save_entry('+j+','+i+')">' + table[j][i] + '</td>';
             }
         }
         

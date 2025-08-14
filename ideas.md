@@ -9,7 +9,6 @@ bigger ideas
 
 flexibility
 - drag and drop to rearrange the categories
-- change entries
 - accept Excel files
 - reset
 
@@ -28,6 +27,7 @@ problems
 - multi paragraph reviews
 - need to shorten date in alternate view
 - reusable template
+- make sure to add empty entry when no information for an entry
 
 questions
 - change where the list is initialized?
@@ -46,3 +46,5 @@ dealt with:
 - local storage
 - basic book stats
 - delete books
+
+- change entries

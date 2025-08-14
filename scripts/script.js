@@ -5,35 +5,42 @@ let bookcount = 0;
 const loadBooks = function() {
     list.length = 0;
     bookcount = 0;
-    // is this what we want to do?
+    // do we want global variables for these?
     
     // loads the list with all the books from local storage
-    const newList = JSON.parse(localStorage.getItem('list'));
-    if (newList != null) {
+    if (localStorage.getItem('list') != null) {
+        const newList = JSON.parse(localStorage.getItem('list'));
         for (let i=0; i<newList.length; i++) {
             list.push(newList[i]);
-        }
-    }
+        } 
+    } 
 
     // gets the list of attributes from local storage
     attributes = [];
-    attributes = JSON.parse(localStorage.getItem('attributes'));
-
+    if (localStorage.getItem('attributes') != null) {
+        attributes = JSON.parse(localStorage.getItem('attributes'));
+    }
+    
     // gets the number of books from local storage
     bookcount = JSON.parse(localStorage.getItem('bookcount'));
 
     // turns dates into JS dates for manipulation
-    let date_att = attributes.indexOf('date');
-    if (date_att != -1) {
-        for (let i=0; i<list[date_att].length; i++) {
-            list[date_att][i] = new Date(list[date_att][i]);
-        }
-    }   
+    if (attributes.includes('date')) {
+        let date_att = attributes.indexOf('date');
+        if (date_att != -1) {
+            for (let i=0; i<list[date_att].length; i++) {
+                list[date_att][i] = new Date(list[date_att][i]);
+            }
+        }   
+    }
+    
 
     if (list.length > 0) {
         displayDefaultTable();
         stat_calc();
     }
+
+    console.log('loaded books');
 
 }
 window.addEventListener('load',loadBooks);
@@ -41,32 +48,44 @@ window.addEventListener('load',loadBooks);
 
 // add book to list
 const addBook = function() {
-    // date is different to use date object
+    // date is different from other attributes so we can use date object
     const date = new Date(document.getElementById('book_date').value);
     if (!(attributes.includes('date'))) {
-        attributes.push(att);
+        attributes.push('date');
 
-        if (bookcount>0) {
+        if (bookcount>0) { // add new list to hold the dates
             list.push(new Array(bookcount));
         } else { list.push(new Array());}
     } 
-    list[attributes.indexOf('date')].push(document.getElementById('date').value);
+    list[attributes.indexOf('date')].push(date);
 
     built_in_attributes = ["title", "author", "genre", "stars", "review"];
 
-    // for every attribute
-    for (att in built_in_attributes) {
-        if (!(attributes.includes('att'))) { // if built-in attributes are not in the attributes list
-            attributes.push(att);
+    // for every built in attribute add it
+    for (i in built_in_attributes) {
+        if (!(attributes.includes(built_in_attributes[i]))) { // if built-in attributes are not in the attributes list
+            attributes.push(built_in_attributes[i]);
 
             if (bookcount>0) {
                 list.push(new Array(bookcount));
             } else { list.push(new Array());}
-        }
-        list[attributes.indexOf(att)].push(document.getElementById('book_'+att).value);
+        
+        } 
+        
+    }
 
-        // clear value
-        document.getElementById('book_'+att).value = '';
+    // add the value to the right table
+    for (i in built_in_attributes) {
+        if (document.getElementById('book_'+built_in_attributes[i]) != null) {
+            list[attributes.indexOf(built_in_attributes[i])].push(document.getElementById('book_'+built_in_attributes[i]).value);
+    
+            // clear value
+            document.getElementById('book_'+built_in_attributes[i]).value = '';
+        } else {
+            console.log(built_in_attributes[i]);
+            list[attributes.indexOf(built_in_attributes[i])].push(null);
+        }
+
     }
     bookcount++;
 
@@ -78,8 +97,10 @@ const addBook = function() {
         localStorage.setItem('attributes', attributes);
         localStorage.setItem('bookcount', bookcount);
     } else {
-        console.log('storage doesnt work');
+        console.log('storage doesn\'t work');
     }
+
+    console.log('added book: ' + list[attributes.indexOf('title')]);
 
     stat_calc();
     storeList();
@@ -121,6 +142,7 @@ const delete_col = function(label_index) {
 }
 
 
+// reset to blank book table
 const reset_list = function() {
     let msg = 'Are you sure you want to delete all of your books?'
 
@@ -139,9 +161,12 @@ document.getElementById('reset').addEventListener('click', reset_list)
 
 // clear entries
 const clear = function() {
-    document.getElementById('book_date').value = '';
-    document.getElementById('book_title').value = '';
-    document.getElementById('book_author').value = '';
+    built_in_attributes = ["title", "author", "genre", "stars", "review", "date"];
+
+    // for every attribute
+    for (att in built_in_attributes) {
+        document.getElementById('book_'+att).value = '';
+    }
 }
 document.getElementById('clear').addEventListener('click', clear)
 
@@ -227,16 +252,67 @@ const addFile = function() {
 }
 document.getElementById('submit_file').addEventListener('click', addFile);
 
+// saves new value of cell that was edited
 const save_entry = function(cat_index, book_index) {
-    console.log(cat_index, book_index);
-    console.log(document.getElementById('entry'+cat_index+book_index).value);
     list[cat_index][book_index] = document.getElementById('entry'+cat_index+book_index).innerText;
     storeList();
 
     stat_calc();
 }
 
+// first entry in a new row
+/*
+const save_new_book = function(cat_index, book_index) {
+    save_entry(cat_index, book_index);
+    
+    storeList();
 
+    // change current row to normal row
+    let last_row = document.getElementById(books_list).rows[table.rows.length - 1];
+    for (let i=0; i<attributes.length; i++) {
+        last_row[i].removeEventListener('focusout', save_new_book);
+        last_row[i].addEventListener('focusout', save_entry);
+    }
+
+    // add new row
+    document.getElementById.innerHTML() += add_empty_row(attributes);
+
+    bookcount++;
+    stat_calc();
+
+}
+*/
+
+
+// add an empty year
+const add_empty_row = function(atts) {
+
+    let row_contents = '<tr>';
+    row_num = bookcount;
+    
+    // for each category
+    for (let i = 0; i<atts.length; i++) {
+        row_contents += '<td id=entry'+i+row_num+' contenteditable onfocusout="save_entry('+i+','+row_num+')"></td>';
+
+    }
+    row_contents += '<td><button onclick="delete_row(' + row_num + ')">🗑️</button></td>' + '</tr>';
+
+    return row_contents;
+}
+
+
+// if a new book is entered
+//const new_book = function() {
+    // TODO
+
+//    bookcount++;
+//}
+//table = document.getElementById(table);
+//last_row = table.rows[ table.length - 1];
+//last_row.addBook()
+
+
+// displays the table
 const displayTable = function(table, atts) {
     
     // for every label, add to table contents
@@ -264,6 +340,10 @@ const displayTable = function(table, atts) {
         table_contents += '<td><button onclick="delete_row(' + i + ')">🗑️</button></td>' + '</tr>'; 
 
     }
+
+    // add empty row ready to edit
+    table_contents += add_empty_row( atts);
+    
 
     // put table contents in the table
     document.getElementById('books_list').innerHTML = table_contents;
@@ -435,3 +515,6 @@ const stat_calc = function() {
             function(x){return (x.getFullYear() == new Date().getFullYear()) && 
             (x.getMonth() == new Date().getMonth());}).length;
 }
+
+
+//module.exports = {sortList};

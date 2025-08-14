@@ -1,0 +1,97 @@
+const delete_row = function(row_num) {
+    for (let i=0; i<attributes.length; i++) {
+        list[i].splice(row_num,1);
+    }
+    storeList();
+
+    bookcount --;
+    stat_calc();
+    
+    
+    displayDefaultTable();
+}
+// TODO: add undo
+
+// deletes attribute from table
+const delete_col = function(label_index) {
+    attributes.splice(label_index,1);
+    
+    list.splice(label_index,1);
+
+    displayDefaultTable();
+    storeList();
+}
+
+
+// reset to blank book table
+const reset_list = function() {
+    let msg = 'Are you sure you want to delete all of your books?'
+
+    if (confirm(msg) == true) {
+        list = [];
+        attributes = [];
+        bookcount = 0;
+
+        document.getElementById('books_list').innerHTML = '';
+        storeList();
+    }
+
+}
+document.getElementById('reset').addEventListener('click', reset_list)
+
+
+const sortList = function(order) {
+    if (order === 'newest') {
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[att].getTime()<b[att].getTime()});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
+    }
+    else if (order === 'oldest') {
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[att].getTime()>b[att].getTime()});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
+    }
+    else if (order=== 'alphabetical') {
+        t_list = transpose(list);
+        let att = attributes.indexOf('date');
+        t_list.sort(function(a,b){return a[1].localeCompare(b[1])});
+        t_list = transpose(t_list);
+        displayTable( t_list, attributes);
+    } 
+    else if(order === 'original') {
+        displayDefaultTable();
+    }
+    // tosort would make a copy of the list
+}
+document.getElementById('sort_newest').addEventListener('click', function(){sortList('newest')});
+document.getElementById('sort_oldest').addEventListener('click', function(){sortList('oldest')})
+document.getElementById('sort_alphabetical').addEventListener('click', function(){sortList('alphabetical')})
+document.getElementById('sort_original').addEventListener('click', function(){sortList('original')})
+// need function to get the type of sort in
+
+
+const transpose = function(tlist) {
+    return tlist[0].map((col, i) => tlist.map(row => row[i]));
+    // from https://www.geeksforgeeks.org/transpose-a-two-dimensional-2d-array-in-javascript/
+}
+
+
+const stat_calc = function() {
+    // total books
+    document.getElementById('total-books').innerHTML = bookcount;
+
+    // books this year
+    document.getElementById('year-books').innerHTML = 
+        list[attributes.indexOf('date')].filter( // filters just the books from this year and gets the length
+            function(x){return x.getFullYear() == new Date().getFullYear();} ).length;
+
+    // books this month
+    document.getElementById('month-books').innerHTML = 
+        list[attributes.indexOf('date')].filter(
+            function(x){return (x.getFullYear() == new Date().getFullYear()) && 
+            (x.getMonth() == new Date().getMonth());}).length;
+}

@@ -284,7 +284,7 @@ const save_new_book = function(cat_index, book_index) {
 */
 
 
-// add an empty year
+// add an empty book
 const add_empty_row = function(atts) {
 
     let row_contents = '<tr>';

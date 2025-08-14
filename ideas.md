@@ -32,6 +32,9 @@ problems
 questions
 - change where the list is initialized?
 
+security
+- Use Content Security Policy (CSP): Implement a Content Security Policy (CSP) in your site's HTML headers to protect against cross-site scripting (XSS) attacks.
+https://www.geeksforgeeks.org/git/github-pages/
 
 other
 - need to protect things that are being entered?
